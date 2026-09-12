@@ -1,0 +1,14 @@
+\section{Limitations}
+\label{sec:limitations}
+
+\begin{itemize}
+  \item \textbf{Population base year.} Population figures are from Census 2017; no adjustment for population growth or migration since then was attempted.
+  \item \textbf{Facility registry vs.\ operational reality.} RENIPRESS records administrative status and category; being listed as active and resolutive does \emph{not} guarantee real staffing, equipment, or supplies on any given day, nor ambulance availability, which is not modeled at all.
+  \item \textbf{Road network coverage.} OpenStreetMap coverage of rural roads in Andean and Amazonian terrain can be incomplete; some rural ways are mapped only as \texttt{track}, routed using a modeled 12\,km/h assumption (Section~\ref{sec:routing}), not an observed speed.
+  \item \textbf{Cross-department routing.} Pairs spanning two departments were not evaluated (Section~\ref{sec:crossdept}); we verified this does not change any already-routed settlement's nearest facility, but it is not a full national routing solution.
+  \item \textbf{Frame coverage.} \OutsideFramePct\% of the census population of the three departments (\OutsideFramePop{} people) belongs to settlements outside the SIGMED sampling frame entirely and is not represented anywhere in this analysis.
+  \item \textbf{Calibration variance.} District-level calibration factors range widely (roughly 0.25$\times$ to 178$\times$), reflecting genuinely small per-stratum samples; this is reported as a diagnostic, and no district was excluded on this basis.
+  \item \textbf{Two non-calibrable districts.} Wanchaq and Luya Viejo have no sampled settlement with a valid population match, so no calibrated weight exists for them.
+  \item \textbf{Unroutable population.} \CovNoTimeTotal\% of the frame population has no estimable car access time; this is a modeling/sampling limitation, not evidence that these people lack access in reality.
+  \item \textbf{No causal inference.} All comparisons (urban/rural, departmental, territorial) are descriptive associations. No causal mechanism is estimated or implied.
+\end{itemize}

@@ -1,0 +1,26 @@
+\section{Data Sources}
+\label{sec:data}
+
+Table~\ref{tab:sources} summarizes the six datasets used, with reference dates verified against the download manifests produced at acquisition time (each raw file is stored under \texttt{data/raw/} together with a manifest recording URL, download timestamp, and SHA-256 checksum). One clarification is important throughout this report: the \emph{primary statistical source} of population figures is the INEI Census 2017 \citep{inei2018censo}; CENEPRED \citep{cenepred2026sigrid} and MINAM \citep{minam2026geoservidor} are government \emph{geospatial redistribution channels} for that same census product, not independent population sources. This was confirmed empirically: of 12{,}312 centros poblados comparable between the two channels by identifier, population values were identical in 100\% of cases, and CENEPRED's district- and department-level population sums reproduce the official Census 2017 totals for the three departments with zero discrepancy.
+
+\begin{table}[htb]
+\centering
+\caption{Data sources used in this analysis.}
+\label{tab:sources}
+\small
+\input{generated/tables/data_sources.tex}
+\end{table}
+
+No license terms are asserted here beyond what each portal states as an open-data catalogue; none of the source terms of use were found to prohibit this kind of derived, non-commercial analytical use, but no formal license text was verified in detail and none is claimed.
+
+\subsection{Facility data quality (RENIPRESS)}
+
+RENIPRESS lists \NFacilitiesTotal{} facilities across the three departments, of which \NResolutive{} meet the resolutive definition (Section~\ref{sec:resolutive-def}). Data-quality checks were run on the full facility and demand-point tables and \emph{no problematic record was silently dropped}: every exclusion is retained with an explicit flag and reason. Table~\ref{tab:quality} summarizes the key figures actually produced by the pipeline. Notably, \NResolutiveMissingCoords{} of the \NResolutive{} resolutive facilities lacks a usable coordinate and was therefore excluded from routing (kept in the data, flagged, not deleted), leaving \NResolutiveRoutable{} routable resolutive facilities; separately, \NDistrictMismatch{} facility records have coordinates falling outside their declared administrative district (a spatial join discrepancy, kept as a cross-check flag rather than auto-corrected, since either the coordinate or the declared UBIGEO could be the error).
+
+\begin{table}[htb]
+\centering
+\caption{Key data-quality figures (facilities, routing, and population frame).}
+\label{tab:quality}
+\small
+\input{generated/tables/data_quality.tex}
+\end{table}

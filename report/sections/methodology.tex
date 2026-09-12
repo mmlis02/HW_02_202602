@@ -1,0 +1,58 @@
+\section{Methodology}
+\label{sec:methodology}
+
+\subsection{Definition of a resolutive facility}
+\label{sec:resolutive-def}
+
+A facility is \textbf{resolutive} if and only if (a) it is active in RENIPRESS, and (b) its normalized category is one of \{II-1, II-2, II-E, III-1, III-2, III-E\}. Categories I-1 through I-4 remain in the dataset but are not part of the resolutive baseline; they are used separately, in the companion dashboard, as candidate facilities for an upgrade scenario. This is a data-driven operational definition (based on the Ministry of Health's own facility categorization), not a clinical judgment about any specific facility's actual capacity.
+
+\subsection{Sampling design}
+\label{sec:sampling}
+
+The demand-point universe is the SIGMED (MINEDU) catalogue of centros poblados in the three departments, comprising \SigmedUniverse{} settlements. Given the computational cost of routing, the analysis draws a stratified probability sample of \SampleSize{} settlements (stratified by district, one stratum per UBIGEO, systematic $\pi$ps/Madow selection, seed \texttt{\SampleSeed} for reproducibility), producing a per-settlement \texttt{design\_weight} equal to the inverse first-order inclusion probability. This weight reflects the probability of a \emph{settlement} being sampled -- it says nothing about how many people live in it.
+
+That distinction turned out to matter. An early version of this analysis used \texttt{design\_weight} as if it were a population weight, which implicitly treats a settlement of 5{,}000 people the same as one of 5. To correct this, we obtained real settlement-level population from the Census 2017 (via CENEPRED, Section~\ref{sec:data}) and constructed a Horvitz--Thompson-style population weight,
+\[
+  \text{HT weight}_i = \text{population}_i \times \text{design\_weight}_i .
+\]
+This estimator is unbiased in expectation but exhibited high variance at the district level: summed over the matched sample and compared to the known census population of the matched settlement universe (defined below as U4), department-level ratios of the HT estimate to the true value ranged from 0.77 to 1.27, and province-level ratios ranged far more widely, as expected from a sample of roughly 24 settlements per stratum combined with a highly skewed within-district population distribution (a few large settlements, many small ones).
+
+Because the true population total of the matched settlement universe \emph{is} known from the census-linked source at the district level, we calibrated the weights against it -- using a known auxiliary total to reduce variance is a standard survey-calibration technique \citep{deville1992calibration}, not a manipulation of the substantive result. For each district $h$:
+\[
+  \text{calibration\_factor}_h = \frac{\text{known\_population}_h}{\displaystyle\sum_{i \in h} \text{HT weight}_i}, \qquad
+  \text{calibrated\_weight}_i = \text{HT weight}_i \times \text{calibration\_factor}_h .
+\]
+By construction, $\sum_{i \in h} \text{calibrated\_weight}_i = \text{known\_population}_h$ for every district where calibration is possible; this was verified numerically to within floating-point precision at the district, province, department and total levels. Two districts (Wanchaq, Cusco; Luya Viejo, Amazonas) had \emph{zero} sampled settlements with a valid population match despite having known census population, so calibration is impossible there -- these are marked explicitly and never assigned an invented weight. All results in this report use \texttt{calibrated\_weight} unless stated otherwise; the uncalibrated Horvitz--Thompson figure is reported alongside the main total as a sensitivity check (Table~\ref{tab:access}).
+
+\textbf{Calibration target.} The calibration target is U4 -- the population of settlements that are simultaneously in the SIGMED sampling frame \emph{and} matched to a census-linked population record -- not the full departmental census population. The \OutsideFramePct\% of census population belonging to settlements that SIGMED does not represent at all (Section~\ref{sec:frame}) is outside the frame by construction and is never redistributed onto other settlements.
+
+\subsection{Frame coverage: settlement count vs.\ population}
+\label{sec:frame}
+
+A central methodological finding of this analysis is that these two statements are not equivalent:
+\begin{quote}
+``\PopulationMatchedPct\% of sampled settlements have a matched population record.''
+\end{quote}
+\begin{quote}
+``The frame covers \FrameCoveragePct\% of the census population of the three departments.''
+\end{quote}
+Only the second is a statement about \emph{people}. The first, by settlement count, is a much lower number because the SIGMED catalogue enumerates many small or informal localities (education-system reference points, most without a school and without an assigned census code) that the official Census 2017 settlement catalogue (CENEPRED/MINAM) does not separately list; these tend to have negligible population. When population is summed correctly -- once per unique census settlement identifier, never once per SIGMED row, avoiding the double-counting that a naive per-row sum over a small number of duplicate keys would otherwise introduce -- the settlements SIGMED does capture account for \FrameCoveragePct\% of the \UTwoPopulation{} residents of the three departments (U2, the official Census 2017 total); \OutsideFramePop{} people (\OutsideFramePct\%) belong to settlements outside the SIGMED frame and are excluded from this analysis, not imputed.
+
+\subsection{Routing methodology}
+\label{sec:routing}
+
+The road network was extracted from the \OsmCutoffDate{} OpenStreetMap/Geofabrik snapshot for Peru (\NetworkNodes{} nodes in the combined three-department network), built into a directed graph (NetworkX) per department, with separate edge-weight profiles for car, bicycle and foot. Each settlement and facility coordinate is snapped to its nearest routable network node (maximum snap distance 2{,}000\,m; \CarSnapFailed{} settlements, \CarSnapFailedPct\%, could not be snapped within this tolerance for the car profile). Shortest paths were computed with a facility-centric, multi-source Dijkstra strategy (one search per facility over the reversed graph) and cached to disk, producing a precomputed origin$\times$facility travel-time matrix -- no route is computed at analysis or report-generation time.
+
+For the car profile, travel time uses the posted \texttt{maxspeed} tag when present and numerically valid, falling back to a highway-type default speed otherwise. Unpaved \texttt{track} ways are included in the car network with a fallback speed of \TrackFallbackSpeed\ km/h -- a \emph{modeling assumption}, not an observed speed. This inclusion followed a sensitivity check: excluding \texttt{track} left \TrackPreviouslyIsolated{} settlements without any road-network connection at all, of which including \texttt{track} recovered a valid route to a resolutive facility for \TrackRecovers. Given that alternative, and that no observed speed data exists for these ways, inclusion with an explicit, disclosed assumption was judged preferable to leaving those points artificially isolated.
+
+\subsection{Cross-department routing limitation}
+\label{sec:crossdept}
+
+Road graphs were built \emph{per department} rather than as one national graph, to keep memory use within the constraints of the analysis machine. As a consequence, origin-destination pairs spanning two departments (\CrossDeptNotEvaluatedPct\% of all matrix cells) are labeled \texttt{cross\_department\_not\_evaluated} -- meaning \emph{not assessed}, not ``no route exists.'' We verified geometrically (using a geodesic lower bound on any possible cross-department route) that this architectural limitation cannot change the identity of the nearest resolutive facility for any settlement that already has a routed nearest facility within its own department; it therefore does not bias the results reported here, though it does mean a small number of routing failures could in principle be resolved by a genuinely national graph -- a possible future refinement, not attempted here.
+
+\subsection{Access metrics}
+\label{sec:metrics}
+
+The primary metric is $t_{\min}(i)$: car travel time, in minutes, from settlement $i$ to its nearest resolutive facility over the road network. Bicycle and foot times are computed but used only as complementary diagnostics (Section~\ref{sec:discussion}), never as a substitute for the car metric. For settlements without a routed car time (snap failure or no route found within the department), $t_{\min}(i)$ is undefined -- it is \emph{never} imputed as zero, infinity, or ``$>$120 minutes.''
+
+Population coverage is reported as \textbf{Reading B}: shares of the total population-frame (all settlements with a valid calibrated weight, whether or not routed), split into $\leq$30, $>$30--60, $>$60--120, $>$120 minutes, and a separate \emph{no time estimate} category for settlements without a routed time. These five categories sum to 100\% of the population frame by construction. This is distinct from -- and, unless stated otherwise, preferred over -- a reading restricted only to routed settlements, which would silently hide the population for whom no estimate exists.

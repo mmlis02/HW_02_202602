@@ -1,0 +1,17 @@
+\section{Introduction and Problem Statement}
+
+Planning for emergency and specialized health care requires knowing not just how many facilities exist in a region, but how long it actually takes a resident to reach one capable of resolving their condition. Straight-line (Euclidean) distance is a poor proxy for this: it ignores the road network, terrain, and the fact that a facility five kilometers away in a straight line may require an hour of travel around a river valley or along an unpaved mountain road. Where road-network structure is heterogeneous -- as it is across the coastal, Andean and Amazonian geographies of Tumbes, Amazonas and Cusco -- straight-line distance can differ from actual travel distance by a large and \emph{non-constant} factor (Section~\ref{sec:results}), making it unsuitable for comparing accessibility across places.
+
+Travel-time-based accessibility measures are a standard alternative in the public-health and geography literature \citep{weiss2018global}, precisely because they capture the network effect that straight-line distance cannot. Combining travel time with population data further allows accessibility to be expressed as a share of the \emph{population} affected, rather than a share of geographic area or facility count -- a distinction that this report treats as fundamental (Section~\ref{sec:methodology}). Territorial inequality in access -- some districts routinely far from resolutive care, others close to it -- is directly relevant to planning: it identifies where investment in facility upgrades, road improvement, or outreach services would close the largest population-weighted gaps.
+
+This report answers a single, purely descriptive question:
+
+\begin{quote}
+\emph{How does road-network accessibility to resolutive health facilities vary across Tumbes, Amazonas and Cusco, and where are the largest population-weighted access gaps?}
+\end{quote}
+
+We do not claim that any factor \emph{causes} poor access, nor do we estimate the causal effect of any intervention; the analysis is descriptive, and geographic/administrative correlates (e.g., urban vs.\ rural classification) are reported as associations only.
+
+A \textbf{resolutive} facility, as used throughout this report, is one equipped to resolve a health emergency without requiring referral to a higher level of care -- operationally, an active facility in category II-1, II-2, II-E, III-1, III-2 or III-E (Section~\ref{sec:resolutive-def}). Facilities in categories I-1 through I-4 remain in the data and are used as \emph{upgrade candidates} in the companion interactive dashboard, but are not part of the resolutive baseline.
+
+The remainder of this report proceeds as follows: Section~\ref{sec:data} describes the data sources and their quality; Section~\ref{sec:methodology} specifies the sampling design, the population and weight calibration, the routing methodology, and the access metrics; Section~\ref{sec:results} presents the main quantitative results; Section~\ref{sec:discussion} interprets them; Section~\ref{sec:limitations} states what the analysis cannot support; and Section~\ref{sec:conclusions} closes with recommendations.

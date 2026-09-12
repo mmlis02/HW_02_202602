@@ -1,0 +1,12 @@
+\begin{tabular}{p{2.6cm}p{2.3cm}p{1.5cm}p{1.3cm}p{3.3cm}p{4.3cm}}
+\toprule
+Dataset & Source & Ref.\ date & Unit & Main use & Key limitation \\
+\midrule
+RENIPRESS / SUSALUD & \url{datosabiertos.gob.pe} & 2026-08-31 & facility & Facility locations, category, status & Self-reported registry; active status does not guarantee real operational capacity \\
+SIGMED / MINEDU & \url{sigmed.minedu.gob.pe} & 2020-02-05 & centro poblado & Demand-point sampling frame (19{,}370 CP) & Enumerates finer/informal localities than the official census CP catalogue \\
+IGN administrative boundaries & \url{datosabiertos.gob.pe} & 2025-06-24 & polygon & Department/district boundaries & 1:100{,}000 scale \\
+OpenStreetMap / Geofabrik & \url{download.geofabrik.de} & 2026-09-10 & PBF snapshot & Road network for routing & Rural coverage in sierra/selva may be incomplete \\
+Census 2017 / INEI (via CENEPRED) & \url{sig.cenepred.gob.pe} & 2026-09-11 & centro poblado & Population per centro poblado & Primary statistical source: INEI; CENEPRED is a government geospatial redistribution channel \\
+MINAM Geoservidor & \url{minam.gob.pe} & 2026-09-11 & centro poblado & Cross-validation + urban/rural (\texttt{area\_17}) & Same underlying Census 2017 product as CENEPRED (independently confirmed) \\
+\bottomrule
+\end{tabular}

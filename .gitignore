@@ -1,0 +1,33 @@
+# Entorno
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Datos: no se versionan los datasets grandes ni derivados.
+# Se conserva la estructura de carpetas con .gitkeep.
+data/raw/*
+data/processed/*
+data/cache/*
+data/outputs/*
+!data/**/.gitkeep
+
+# Figuras/tablas generadas
+figures/*
+tables/*
+!figures/.gitkeep
+!tables/.gitkeep
+
+# LaTeX
+report/*.aux
+report/*.log
+report/*.out
+report/*.bbl
+report/*.blg
+report/*.toc
+report/*.synctex.gz
+report/*.pdf
+
+# macOS
+.DS_Store

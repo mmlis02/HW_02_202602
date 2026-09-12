@@ -1,0 +1,39 @@
+# -------------------------------------------------------------------
+# requirements.txt — REFERENCIA pip.
+#
+# El entorno soportado se crea con conda (ver environment.yml), porque el stack
+# geoespacial (GDAL / GEOS / PROJ) necesita binarios de conda-forge y esta
+# máquina no tiene Homebrew ni compilador de C. Este archivo se mantiene por
+# convención y para CI con librerías del sistema ya instaladas.
+#
+# Fase 0 instala SOLO el núcleo (Fase 1: adquisición + validación).
+# Las dependencias de fases posteriores están listadas abajo, comentadas, y se
+# instalarán en su fase correspondiente.
+# -------------------------------------------------------------------
+
+# --- Núcleo (Fase 0/1) — instalado ---
+pandas==3.0.5
+geopandas==1.1.4
+shapely==2.1.2
+pyproj==3.8.0
+pyogrio==0.13.0
+pyarrow==25.0.0
+PyYAML==6.0.3
+requests==2.34.2
+pytest==9.1.1
+
+# --- Fase 2 (routing OSM/OSRM) — pendiente ---
+# osmium              # recorte del PBF a los 3 departamentos + buffer
+# requests-cache      # (opcional) cache HTTP de llamadas a OSRM
+# diskcache           # cache de la matriz de tiempos
+
+# --- Fase 3 (métricas / mapas) — instalado ---
+matplotlib==3.11.1
+openpyxl==3.1.5
+
+# --- Fase 4 (dashboard) — instalado ---
+streamlit==1.63.0
+streamlit-folium==0.27.4
+folium==0.20.0
+branca==0.8.2
+plotly==7.0.0

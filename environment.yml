@@ -1,0 +1,42 @@
+# -------------------------------------------------------------------
+# environment.yml — definición AUTORITATIVA del entorno.
+#
+# Crear / reproducir:
+#     conda env create -p ./.venv -f environment.yml
+#     conda activate ./.venv
+#
+# Motivo de usar conda y no solo pip: el stack geoespacial (GDAL/GEOS/PROJ)
+# requiere binarios; esta máquina no tiene Homebrew, sudo ni toolchain de C.
+# conda-forge los provee precompilados para macOS arm64.
+#
+# Fase 0 instala SOLO el núcleo. Dependencias de fases 2-4 abajo, comentadas.
+# -------------------------------------------------------------------
+name: hw02-emergency-access
+channels:
+  - conda-forge
+dependencies:
+  - python=3.12
+  # --- núcleo (Fase 0/1) ---
+  - pandas=3.0.5
+  - geopandas=1.1.4
+  - pyproj=3.8.0
+  - shapely=2.1.2
+  - pyogrio=0.13.0
+  - pyarrow=25.0.0
+  - pyyaml=6.0.3
+  - requests=2.34.2
+  - pytest=9.1.1
+  # --- Fase 2 (routing) — descomentar en su fase ---
+  # - pyosmium
+  # - diskcache
+  # --- Fase 3 (métricas/mapas) — instalado ---
+  - matplotlib-base=3.11.1
+  - openpyxl=3.1.5
+  # --- Fase 4 (dashboard) — instalado ---
+  - streamlit=1.63.0
+  - folium=0.20.0
+  - branca=0.8.2
+  - plotly=7.0.0
+  - pip
+  - pip:
+    - streamlit-folium==0.27.4

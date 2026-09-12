@@ -1,0 +1,43 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{caption}
+\usepackage{natbib}
+\PassOptionsToPackage{hyphens}{url}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{titlesec}
+\usepackage{enumitem}
+
+\hypersetup{colorlinks=true, linkcolor=blue!50!black, citecolor=blue!50!black, urlcolor=blue!50!black}
+\graphicspath{{generated/figures/}}
+\setlist[itemize]{noitemsep, topsep=2pt}
+\titlespacing*{\section}{0pt}{10pt}{4pt}
+\titlespacing*{\subsection}{0pt}{8pt}{3pt}
+
+\input{generated/metrics.tex}
+
+\title{\vspace{-1cm}Road-Network Accessibility to Resolutive Health Facilities in Tumbes, Amazonas and Cusco, Peru}
+\author{Emergency-Care Road-Accessibility Analysis}
+\date{September 2026}
+
+\begin{document}
+\maketitle
+\vspace{-0.5cm}
+
+\input{sections/abstract.tex}
+\input{sections/introduction.tex}
+\input{sections/data_sources.tex}
+\input{sections/methodology.tex}
+\input{sections/results.tex}
+\input{sections/discussion.tex}
+\input{sections/limitations.tex}
+\input{sections/conclusions.tex}
+
+\bibliographystyle{plainnat}
+\bibliography{references}
+
+\end{document}

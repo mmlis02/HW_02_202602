@@ -1,0 +1,78 @@
+\section{Results}
+\label{sec:results}
+
+\subsection{Overall and by-department access}
+
+Table~\ref{tab:access} reports the calibrated population-weighted access metrics, together with the uncalibrated (Horvitz--Thompson) total mean as a sensitivity check: \MeanAccessTotalHt{} minutes uncalibrated vs.\ \MeanAccessTotal{} minutes calibrated -- a difference large enough (\MeanAccessDiffHtCal{} minutes) to matter for planning, and the reason Section~\ref{sec:sampling}'s calibration step is treated as a substantive correction rather than a cosmetic one.
+
+\begin{table}[htb]
+\centering
+\caption{Population-weighted car access time and coverage bands (Reading B), calibrated weights. $^\dagger$Cumulative.}
+\label{tab:access}
+\input{generated/tables/access_by_department.tex}
+\end{table}
+
+Figure~\ref{fig:coverage} shows the same information graphically. Tumbes is markedly better served (\CovLeThirtyTumbes\% of its population within 30 minutes, no population beyond 120 minutes) than Amazonas or Cusco, both of which combine a substantial \emph{no-time-estimate} share (\CovNoTimeAmazonas\% and \CovNoTimeCusco\%, respectively) with a longer mean for the population that \emph{is} routed. This gap should not be over-read as ``Amazonas and Cusco have uniformly worse access'': part of the difference is that a larger share of their population simply lacks a routable estimate under current network/sample coverage, which is a data-availability statement, not an access-quality one.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.85\textwidth]{fig1_coverage_by_department.pdf}
+\caption{Population coverage by access-time band (Reading B, calibrated weights). Each bar sums to 100\% of that scope's population frame.}
+\label{fig:coverage}
+\end{figure}
+
+\subsection{Critical gaps: worst computable districts}
+\label{sec:gaps}
+
+We rank districts by calibrated population-weighted mean access time, but only among the \NWorstComputable{} districts classified as \texttt{computable} -- i.e., with enough routed, population-matched sample to support a numeric estimate. This is a deliberate design choice: a naive ranking that lets a district with a single low-time observation and near-zero routing coverage appear artificially ``good,'' or lets a district with literally zero data sort to the top of a descending numeric sort, would misrepresent the evidence. Table~\ref{tab:worst} lists the ten worst computable districts.
+
+\begin{table}[htb]
+\centering
+\caption{Ten worst computable districts by population-weighted mean car access time.}
+\label{tab:worst}
+\small
+\input{generated/tables/worst_districts.tex}
+\end{table}
+
+\TopOneDistrict{} (Cusco) has the longest computable mean access time, at \TopOneTime{} minutes, followed by Marcapata and Kosñipata, also in Cusco -- all in high-jungle districts of Quispicanchi/Paucartambo with genuinely long, low-speed road distances rather than any apparent data artifact. A separate set of \NInsufficientData{} districts (roughly a fifth of the 209 in scope) could not be classified as computable: for some, every sampled settlement failed to route at all (\texttt{zero\_routing\_coverage}); for two (Wanchaq and Luya Viejo), no sampled settlement had a matched population despite the district's population being known (\texttt{calibration\_impossible}); others had too few routed or population-matched points to trust a mean (\texttt{low\_routing\_coverage}, \texttt{low\_population\_sample\_coverage}). \textbf{These districts are not, and must not be read as, the worst-performing ones} -- the correct statement is that the analysis currently cannot estimate their access reliably, which is a distinct claim from ``access there is poor.'' Wanchaq in particular is a dense, central, urban district of Cusco city where poor real-world access would be implausible; its appearance in this list reflects a sampling gap, not a road-network one.
+
+\subsection{Access inequality}
+
+Figure~\ref{fig:lorenz} shows the Lorenz curve of car access time among the population for whom a route could be estimated, weighted by calibrated population weight. The population-weighted Gini coefficient is \GiniCalibrated{}, computed over \GiniPopIncluded{} people (\GiniPctOfUFour\% of the settlement-matched frame population, U4). The correct label for this statistic is \emph{the Gini coefficient of car access time among the SIGMED--Census~2017 frame population with an estimable route} -- it does not, and cannot, describe inequality experienced by the \GiniPctExcluded\% of the frame population without an estimable route; no time value was imputed for them in order to include them in this calculation.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.55\textwidth]{fig3_lorenz_curve.pdf}
+\caption{Lorenz curve of car access time (calibrated weights), population with an estimable route only.}
+\label{fig:lorenz}
+\end{figure}
+
+\subsection{Geographic pattern}
+
+Figure~\ref{fig:map} maps calibrated mean access time by district. Districts without sufficient data are shown in a neutral gray, deliberately distinguished from the (green-to-red) access-time color scale, so that ``no information'' cannot be mistaken for ``good access'' or ``bad access.'' The map corroborates the department-level pattern: the longest access times concentrate in the high-jungle districts of southeastern Cusco and northern Amazonas, consistent with the topography of those areas.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.62\textwidth]{fig2_choropleth_access.pdf}
+\caption{District-level calibrated mean car access time. Gray districts have insufficient data to compute a mean (Section~\ref{sec:gaps}).}
+\label{fig:map}
+\end{figure}
+
+\subsection{Urban vs.\ rural}
+
+Using a Census-based urban/rural classification (MINAM \texttt{area\_17}, covering \UrbanRuralClassifiedPct\% of the sample; the remainder is kept as an explicit \emph{unknown} category, never guessed or hidden), the calibrated weighted mean access time is \UrbanMean{} minutes for urban settlements and \RuralMean{} minutes for rural ones (weighted medians \UrbanMedian{} and \RuralMedian{}, respectively). Figure~\ref{fig:urbanrural} shows the coverage-band comparison. The urban-rural gap here is modest and, notably, its \emph{direction} is sensitive to whether calibrated or uncalibrated weights are used and to the small effective sample of urban settlements classified -- a reminder that this comparison, like all others in this report, is \textbf{descriptive and does not establish a causal effect of rurality on access}.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.62\textwidth]{fig4_urban_rural.pdf}
+\caption{Coverage bands by urban/rural classification, among population with an estimable route.}
+\label{fig:urbanrural}
+\end{figure}
+
+\subsection{Straight-line vs.\ network distance}
+
+Comparing straight-line (geodesic) distance to the actual network routing distance for all \CarRouted{} routed car origin-destination pairs, the network-to-straight-line ratio has median \SvnMedian, mean \SvnMean, and maximum \SvnMax{}. In other words, for a typical trip the real road distance is roughly \SvnMedian$\times$ the straight-line distance, and for some trips nearly \SvnMax$\times$ -- straight-line distance would substantially \emph{underestimate} true travel distance, and by a factor that varies enough across trips that no single constant ``detour factor'' would correct for it reliably. A small fraction of pairs (\SvnPctBelowOne\%) show a ratio marginally below 1, which is not physically possible for a true shortest path; this reflects the straight-line calculation using each point's original coordinate while the network calculation uses its snapped node, a known and bounded discrepancy for very short trips, not a routing error, and no correction factor was applied to force ratios above 1.
+
+\subsection{Complementary multimodal comparison}
+
+Bicycle and foot travel times were also computed but are used only as a complementary, diagnostic comparison, never as a substitute for the car-based primary metric. Foot times are, as expected, far higher; a small number of extreme foot-to-car ratios ($>100\times$) were traced to cases where the pedestrian-accessible network resolves to a \emph{different}, more distant nearest facility than the car network -- a network-topology artifact of profile-specific edge accessibility rather than a data error -- and are documented as a known limitation rather than corrected.
